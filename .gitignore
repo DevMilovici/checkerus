@@ -142,3 +142,12 @@ dist
 .svelte-kit
 
 # End of https://www.toptal.com/developers/gitignore/api/node
+
+uploader/buffer/*
+uploader/certs/*
+uploader/keys/*
+uploader/checkers/*
+uploader/rezults/*
+uploader/uploads/*
+uploader/connectToVpn.sh
+uploader/public/*

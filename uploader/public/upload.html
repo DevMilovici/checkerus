@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uploader</title>
+    <style>
+      pre {
+        white-space: pre-wrap;       /* css-3 */
+        white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+        white-space: -pre-wrap;      /* Opera 4-6 */
+        white-space: -o-pre-wrap;    /* Opera 7 */
+        word-wrap: break-word;       /* Internet Explorer 5.5+ */
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex justify-center bg-teal-900	text-slate-200">
+  <div class="w-[660px] mt-6 rounded-lg">
+    <div class="flex flex-col gap-2">
+      <form action="/upload" method="POST" enctype="multipart/form-data" class="flex flex-row justify-between gap-2 bg-zinc-800 p-10 rounded-lg drop-shadow-xl shadow-2xl">
+          <input type="file" name="file" required class="bg-zinc-800 rounded-lg p-1 border border-gray-500 cursor-pointer">
+          <input type="submit" value="UPLOAD" class="h-min bg-green-500 hover:bg-green-400 rounded-lg p-1 border border-gray-500 text-slate-800 font-bold cursor-pointer"/>
+      </form>
+      <div class="bg-zinc-800 flex flex-col py-2 rounded-lg drop-shadow-xl shadow-2xl">
+        <span class="justify-self-center text-center mb-2 text-4xl">Results</span>
+        <div class="break-all border-t-4 border-x-4 border-b border-sky-500 rounded-lg">
+          <div class="flex justify-center bg-sky-500 border-b-4 border-sky-500 font-bold">
+            2023.26.03 14:39:33
+          </div>
+          <div class="px-2">
+            <p class="">
+              <pre class="">
+-------------------------------------------------------
+Running EVEN tests...
+-------------------------------------------------------
+Running test_1 with 1 processes. 
+        NumSteps: 
+        InputPath: ./in/in_6.txt
+        OutputPath: ./out/out_6_1.txt
+        RefPath: ./ref/out_6.txt
+        > /usr/bin/time --quiet -f %e -o execTime.test_1.1 timeout 15 mpirun --oversubscribe -np 1 ./homework ./in/in_6.txt ./out/out_6_1.txt
+Finished in 4.69 seconds.
+Running test_1 with 2 processes. 
+        NumSteps: 
+        InputPath: ./in/in_6.txt
+        OutputPath: ./out/out_6_2.txt
+        RefPath: ./ref/out_6.txt
+        > /usr/bin/time --quiet -f %e -o execTime.test_1.2 timeout 15 mpirun --oversubscribe -np 2 ./homework ./in/in_6.txt ./out/out_6_2.txt
+Finished in 2.52 seconds.
+Running test_1 with 4 processes. 
+        NumSteps: 
+        InputPath: ./in/in_6.txt
+        OutputPath: ./out/out_6_4.txt
+        RefPath: ./ref/out_6.txt
+        > /usr/bin/time --quiet -f %e -o execTime.test_1.4 timeout 15 mpirun --oversubscribe -np 4 ./homework ./in/in_6.txt ./out/out_6_4.txt
+Finished in 1.58 seconds.
+Running test_1 with 8 processes. 
+        NumSteps: 
+        InputPath: ./in/in_6.txt
+        OutputPath: ./out/out_6_8.txt
+        RefPath: ./ref/out_6.txt
+        > /usr/bin/time --quiet -f %e -o execTime.test_1.8 timeout 15 mpirun --oversubscribe -np 8 ./homework ./in/in_6.txt ./out/out_6_8.txt
+Finished in 1.17 seconds.
+Execution times: 1 Process - 4.69; 2 Processes -  2.52; 4 Processes - 1.58; 8 Processes - 1.17
+Scalability score ((1P/2P + 2P/4P + 4P/8P) / 3) is 1.60214871619309213356
+Checking outputs for test_1............................PASSED
+
+
+Average scalability score is 1.60214871619309213356
+Average scalability score should be larger than 1.2
+Checking scalability on homework.......................PASSED
+                        Total  =  [ 60/100.000 ]
+              </pre>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

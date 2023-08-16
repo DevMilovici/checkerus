@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uploader</title>
+    <style>
+      pre {
+        white-space: pre-wrap;       /* css-3 */
+        white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+        white-space: -pre-wrap;      /* Opera 4-6 */
+        white-space: -o-pre-wrap;    /* Opera 7 */
+        word-wrap: break-word;       /* Internet Explorer 5.5+ */
+      }
+
+      .content {
+        /* display: none; */
+        overflow: hidden;
+      }
+      
+      .content.inactive {
+        transition: all 0.9s ease-out;
+        opacity: 0;
+        height: 0;
+        overflow: hidden;
+      }
+      .content.active {
+        transition: all 0.9s ease-out;
+        opacity: 1;
+        height: auto;
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex justify-center bg-teal-900	text-slate-200">
+  <div class="w-[700px] mt-6 rounded-lg">
+    <div class="flex flex-col gap-2">
+      <%if (loading != 'true') { %>
+      <form action="/upload?<%= queryObjectString %>" method="POST" 
+            enctype="multipart/form-data" 
+            class="h-[162px] flex flex-row justify-between align-middle content-center items-center	border border-gray-500	gap-2 bg-zinc-800 p-10 rounded-lg drop-shadow-xl shadow-2xl">
+          <input type="file" accept="zip,application/octet-stream,application/zip,application/x-zip,application/x-zip-compressed" name="file" required class="bg-zinc-800 rounded-lg p-1 border border-gray-500 cursor-pointer">
+          <input type="submit" value="UPLOAD" class="h-min bg-green-500 hover:bg-green-400 rounded-lg p-1 border border-gray-500 text-slate-800 font-bold cursor-pointer"/>
+      </form>
+      <% } else { %>
+      <div class="h-[182px] flex flex-col justify-center align-middle	border border-gray-500 bg-zinc-800 p-2 rounded-lg drop-shadow-xl shadow-2xl">
+        <span class="justify-self-center text-center mb-2 text-xl">Your task is in the processing queue...</span>
+        <div class="flex justify-center justify-self-center w-full text-center mb-2 text-4xl"><img class="h-[130px] w-[130px]" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExNmM0MDhlMzAwODAwZGRmNGM5ODBjYWY2ZDljMDEzZGRmMDJlZDA4OSZjdD1n/l3nWhI38IWDofyDrW/giphy.gif" decoding="async" width="353" height="353" class="thumbimage" data-file-width="353" data-file-height="353"></div>
+      </div>
+      <% } %>
+      <div class="bg-zinc-800 flex flex-col py-2 px-2 border border-gray-500 rounded-lg drop-shadow-xl shadow-2xl">
+        <span class="justify-self-center text-center mb-2 text-4xl">Results</span>
+        <%if (rezults.length < 1) { %>
+          <div class="flex justify-center border border-red-500 rounded-lg">
+            There are no submissions.
+          </div>
+        <% } %>
+        <% rezults.forEach(element => { %>
+        <div class="break-all rounded-lg mb-2">
+          <div class="collapsible cursor-pointer flex justify-center bg-sky-500 hover:bg-sky-600 border-2 border-sky-500 hover:border-sky-600 font-bold">
+            <%= element.date %>
+          </div>
+          <div class="content inactive px-2 border-x border-b border-gray-500">
+            <p class="">
+              <pre class="">
+                <%= element.content %>
+              </pre>
+            </p>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+    
+    for (i = 0; i < coll.length; i++) {
+      coll[i].addEventListener("click", function() {
+        var content = this.nextElementSibling;
+        content.classList.toggle("active");
+        content.classList.toggle("inactive");
+      });
+    }
+    </script>
+
+</body>
+</html>
