@@ -5,16 +5,16 @@ In [uploader/buffer](./checkerus/uploader/buffer/) directory must exist an **emp
 ```
 uploader
 └───buffer
-    ├───10.13.0.10-22
-    ├───10.13.0.11-22
-    └───10.13.0.12-22
+    ├───192.168.0.10-22
+    ├───192.168.0.11-22
+    └───192.168.0.12-22
 ```
 
 In [uploader/checkers](./checkerus/uploader/checkers/) directory, for every task must be a directory with the task name each having a subdirectory named **active** containing a .zip file representing the checker script
 
 ```
 uploader
-└───buffer
+└───checkers
     ├───task1
     |   └──active
     |      └───checker.zip
