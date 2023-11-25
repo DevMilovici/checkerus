@@ -32,5 +32,27 @@ namespace Models
             
             return stringBuilder.ToString();
         }
+
+        public string ToStringLatex()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine($"{Text}");
+
+            sb.AppendLine("\t\\begin{enumerate}[a)]");
+            for (int ai = 0; ai < Answers.Count; ai++)
+            {
+                Answers[ai] = Answers[ai].Replace("_", "\\textunderscore ");
+                Answers[ai] = Answers[ai].Replace("<=", "\\leq");
+                Answers[ai] = Answers[ai].Replace(">=", "\\geq");
+
+                if (Answers[ai].Contains('^'))
+                    sb.AppendLine($"\t\t\\item ${Answers[ai]}$");
+                else
+                    sb.AppendLine($"\t\t\\item {Answers[ai]}");
+            }
+            sb.AppendLine("\t\\end{enumerate}");
+
+            return sb.ToString();
+        }
     }
 }

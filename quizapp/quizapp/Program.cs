@@ -7,11 +7,7 @@ List<Question> questions = excelFileService.ReadQuestionsFromCsv("questions.csv"
 
 Quiz quiz = new Quiz(questions);
 
-for(int i = 0; i < questions.Count; i++)
-{
-    Console.WriteLine($"{i + 1}. {questions[i]}\n");
-}
-
+Console.WriteLine($"{quiz}");
 
 for(int setIndex = 0; setIndex < 4; setIndex++)
 {
@@ -20,10 +16,7 @@ for(int setIndex = 0; setIndex < 4; setIndex++)
     if(fileInfo.Exists)
         fileInfo.Delete();
 
-    List<Question> questionsList = quiz.GetQuestionsAtRandom();
+    quiz.Shuffle();
 
-    for (int questionIndex = 0; questionIndex < questionsList.Count; questionIndex++)
-    {
-        File.AppendAllText(outputPath, $"{questionIndex + 1}. {questionsList[questionIndex]}\n");
-    }
+    File.AppendAllText(outputPath, $"{quiz.ToStringLatex()}");
 }

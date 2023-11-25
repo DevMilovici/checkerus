@@ -50,19 +50,45 @@ namespace Models
             return _questions;
         }
 
-        public List<Question> GetQuestionsAtRandom()
+        public List<Question> Shuffle()
         {
 
             Random random = new Random();
 
-            List<Question> questionsRandom = _questions.OrderBy<Question, int>(item => random.Next()).ToList();
+            _questions = _questions.OrderBy<Question, int>(item => random.Next()).ToList();
 
-            foreach(var question in questionsRandom)
+            foreach(var question in _questions)
             {
                 question.ShuffleAnswers();
             }
 
-            return questionsRandom;
+            return _questions;
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            for(int qi = 0; qi < _questions.Count; qi++)
+            {
+                sb.AppendLine($"{qi + 1}. {_questions[qi]}");
+            }
+
+            return sb.ToString();
+        }
+
+        public string ToStringLatex()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("\\begin{enumerate}[1.]");
+            for (int qi = 0; qi < _questions.Count; qi++)
+            {
+                sb.AppendLine($"\t\\item {_questions[qi].ToStringLatex()}");
+            }
+            sb.AppendLine("\\end{enumerate}");
+
+            return sb.ToString();
         }
     }
 }
