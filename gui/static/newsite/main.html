@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checker ATM - Main</title>
+    <!-- PicoCSS -->
+    <link href="https://cdn.jsdelivr.net/npm/picocss@1.0.0/dist/pico.min.css" rel="stylesheet">
+
+    <!-- Custom CSS for Enhancements -->
+    <style>
+        body {
+            background-image: url('https://images.pexels.com/photos/1341279/pexels-photo-1341279.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            font-family: 'Arial', sans-serif;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        header {
+            background-color: rgba(0, 123, 255, 0.8);
+            padding: 15px;
+            color: white;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header nav {
+            display: flex;
+            align-items: center;
+        }
+
+        header h1 {
+            margin-right: 20px;
+            font-size: 1.5rem;
+        }
+
+        header #userName {
+            font-weight: bold;
+            margin-right: auto;
+        }
+
+        .logout-btn {
+            background-color: #dc3545;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .logout-btn:hover {
+            background-color: #b12e3b;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            margin-top: 30px;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .tabs li {
+            list-style: none;
+            padding: 10px 15px;
+            background-color: #e9f4ff;
+            color: #007bff;
+            border-radius: 5px 5px 0 0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .tabs li.active {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .occupy-bar-container {
+            margin-top: 20px;
+        }
+
+        .occupy-bar {
+            width: 0;
+            height: 20px;
+            background-color: #007bff;
+            border-radius: 5px;
+            transition: width 0.3s;
+        }
+
+        .timeout {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .btn-upload {
+            width: 100%;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-upload:hover {
+            background-color: #0056b3;
+        }
+
+        .history-table-container {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th, table td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #f8f9fa;
+        }
+
+        .result-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            display: none;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: gray;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <h1>Checker ATM</h1>
+            <span id="userName">Loading...</span>
+        </nav>
+        <button class="logout-btn" id="logoutBtn">Logout</button>
+    </header>
+
+    <div class="container">
+        <!-- Navigation Tabs -->
+        <ul class="tabs">
+            <li id="uploadTab" class="active">Upload File</li>
+            <li id="historyTab">Upload History</li>
+        </ul>
+
+        <!-- Upload File Tab -->
+        <div class="tab-content active" id="upload">
+            <h2>Upload File</h2>
+            <form id="uploadForm" enctype="multipart/form-data">
+                <label for="fileInput">Choose a file:</label>
+                <input type="file" id="fileInput" required>
+                <button type="submit" class="btn-upload">Upload</button>
+            </form>
+            <div class="occupy-bar-container">
+                <h3>Queue Occupancy</h3>
+                <div id="occupyBar" class="occupy-bar"></div>
+            </div>
+            <div class="timeout">
+                <p id="timeoutText">Loading timeout...</p>
+            </div>
+        </div>
+
+        <!-- Upload History Tab -->
+        <div class="tab-content" id="history">
+            <h2>Upload History</h2>
+            <div class="history-table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Timestamp</th>
+                            <th>Result</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody">
+                        <!-- History records will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="result-container" id="resultContainer">
+                <h3>Result Details</h3>
+                <p id="resultDetails">No result selected.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>- Algoritmi Paraleli -</p>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            const token = localStorage.getItem('authToken');
+            let cachedHistory = null;
+            let timeout = null;
+
+            // Fetch user name
+            $.ajax({
+                url: 'http://localhost:3000/validate',
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${token}` },
+                success: function (response) {
+                    $('#userName').text(response.message);
+                },
+                error: function () {
+                    $('#userName').text("Hello, Guest!");
+                }
+            });
+
+            // Load queue status and timeout in Upload tab
+            function loadQueueAndTimeout() {
+                $.ajax({
+                    url: 'http://localhost:3000/queue-status',
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    success: function (response) {
+                        const occupyPercentage = (response.occupy / 10) * 100;
+                        $('#occupyBar').css('width', `${occupyPercentage}%`);
+                    },
+                    error: function () {
+                        alert('Failed to load queue status.');
+                    }
+                });
+
+                $.ajax({
+                    url: 'http://localhost:3000/canLoad',
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    success: function (response) {
+                        timeout = response.wait;
+                        updateTimeoutText();
+                    },
+                    error: function () {
+                        alert('Failed to load timeout information.');
+                    }
+                });
+            }
+            loadQueueAndTimeout();
+
+            // Update timeout countdown
+            function updateTimeoutText() {
+                if (timeout > 0) {
+                    $('#timeoutText').text(`You can upload in ${timeout} seconds.`);
+                    timeout--;
+                    setTimeout(updateTimeoutText, 1000);
+                } else {
+                    $('#timeoutText').text("Can upload now.");
+                }
+            }
+
+            // Fetch history and cache it
+            function fetchHistory() {
+                $.ajax({
+                    url: 'http://localhost:3000/history',
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    success: function (response) {
+                        cachedHistory = response.uploads;
+                        populateHistoryTable(cachedHistory);
+                    },
+                    error: function () {
+                        $('#historyTableBody').html('<tr><td colspan="3">Failed to load history.</td></tr>');
+                    }
+                });
+            }
+
+            function populateHistoryTable(history) {
+                const historyTableBody = $('#historyTableBody');
+                historyTableBody.empty();
+                if (history && history.length > 0) {
+                    history.forEach(record => {
+                        historyTableBody.append(`
+                            <tr>
+                                <td>${record.ID}</td>
+                                <td>${record.Timestamp}</td>
+                                <td><button class="btn-show-results" data-id="${record.Result}">Show Results</button></td>
+                            </tr>
+                        `);
+                    });
+                } else {
+                    historyTableBody.append('<tr><td colspan="3">No upload history available.</td></tr>');
+                }
+            }
+
+            // Handle Show Results click using cached data
+            $(document).on('click', '.btn-show-results', function () {
+                const resultId = $(this).data('id');
+                const result = cachedHistory.find(record => record.Result === resultId);
+                if (result) {
+                    $('#resultDetails').text(`Result for ${result.Timestamp}: ${result.Result}`);
+                    $('#resultContainer').show();
+                }
+            });
+
+            // Tab navigation
+            $('#uploadTab').on('click', function () {
+                $('#uploadTab').addClass('active');
+                $('#historyTab').removeClass('active');
+                $('#upload').addClass('active');
+                $('#history').removeClass('active');
+            });
+
+            $('#historyTab').on('click', function () {
+                $('#historyTab').addClass('active');
+                $('#uploadTab').removeClass('active');
+                $('#history').addClass('active');
+                $('#upload').removeClass('active');
+                if (!cachedHistory) fetchHistory();
+            });
+
+            // File upload
+            $('#uploadForm').submit(function (e) {
+                e.preventDefault();
+                const file = $('#fileInput')[0].files[0];
+                const formData = new FormData();
+                formData.append('file', file);
+
+                $.ajax({
+                    url: 'http://localhost:3000/upload',
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function () {
+                        alert('File uploaded successfully!');
+                        loadQueueAndTimeout();
+                    },
+                    error: function () {
+                        alert('File upload failed.');
+                    }
+                });
+            });
+
+            // Logout button
+            $('#logoutBtn').on('click', function () {
+                localStorage.removeItem('authToken');
+                window.location.href = '/index.html';
+            });
+        });
+    </script>
+</body>
+
+</html>

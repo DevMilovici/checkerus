@@ -1,0 +1,111 @@
+/* General styling for all pages */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #141E30; /* Fallback for older browsers */
+    background: linear-gradient(to right, #243B55, #141E30);
+    overflow: hidden;
+    color: white;
+}
+
+/* Form container styling */
+form {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 300px;
+}
+
+/* Input styling */
+input[type="email"],
+input[type="password"] {
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+input[type="email"]::placeholder,
+input[type="password"]::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Button styling */
+button {
+    padding: 10px 20px;
+    background-color: #243B55;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #141E30;
+}
+
+/* Message display */
+#loginMessage, #signupMessage, #protectedMessage {
+    margin-top: 15px;
+    color: #FFD700;
+}
+
+/* Add background animated shapes (screen saver effect) */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+    100% { transform: translateY(0px); }
+}
+
+.shape {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: float 5s infinite ease-in-out;
+}
+
+.shape1 {
+    width: 150px;
+    height: 150px;
+    bottom: 10%;
+    left: 15%;
+    animation-duration: 7s;
+    animation-delay: 2s;
+}
+
+.shape2 {
+    width: 100px;
+    height: 100px;
+    top: 20%;
+    right: 10%;
+    animation-duration: 6s;
+}
+
+.shape3 {
+    width: 80px;
+    height: 80px;
+    top: 50%;
+    left: 60%;
+    animation-duration: 9s;
+    animation-delay: 4s;
+}
+
+.shape4 {
+    width: 120px;
+    height: 120px;
+    bottom: 30%;
+    right: 20%;
+    animation-duration: 8s;
+}

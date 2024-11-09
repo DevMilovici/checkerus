@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protected</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom right, #f7f8f9, #eaeef2);
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.5;
+            z-index: 0;
+        }
+
+        .shape1 {
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 0, 0, 0.5);
+            top: 10%;
+            left: 10%;
+        }
+
+        .shape2 {
+            width: 120px;
+            height: 120px;
+            background: rgba(0, 255, 0, 0.5);
+            top: 20%;
+            right: 15%;
+        }
+
+        .shape3 {
+            width: 100px;
+            height: 100px;
+            background: rgba(0, 0, 255, 0.5);
+            bottom: 15%;
+            left: 20%;
+        }
+
+        .shape4 {
+            width: 130px;
+            height: 130px;
+            background: rgba(255, 255, 0, 0.5);
+            bottom: 10%;
+            right: 10%;
+        }
+
+        h2 {
+            color: #2c3e50;
+            z-index: 1;
+        }
+
+        #protectedMessage {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #ecf0f1;
+            border: 1px solid #bdc3c7;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .lab-button {
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+            transition: background-color 0.3s;
+            z-index: 1;
+            flex: 1;
+            max-width: 120px;
+        }
+
+        .lab-button:hover {
+            background-color: #2980b9;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        #uploadForm {
+            display: none;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        input[type="file"] {
+            display: block;
+            margin: 10px auto;
+            padding: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            font-size: 16px;
+            width: calc(100% - 20px);
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        #uploadResponse {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #ecf0f1;
+            border: 1px solid #bdc3c7;
+            text-align: center;
+            color: #333;
+            display: none; /* Initially hide response */
+            position: absolute; /* Position it absolutely */
+            right: 20px; /* Align to the right */
+            top: 100px; /* Set the top position */
+            width: 300px; /* Set a width */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Add shadow for better visibility */
+        }
+
+        #signOutButton {
+            position: absolute;
+            width: 100px;
+            top: 20px;
+            right: 20px;
+            background-color: #e74c3c;
+            padding: 5px 10px;
+            font-size: 14px;
+            z-index: 1;
+        }
+
+        #signOutButton:hover {
+            background-color: #c0392b;
+        }
+
+        h1 {
+            position: absolute;
+            top: 100px;
+        }
+    </style>
+</head>
+<body>
+    <script>async function loadProtectedContent() {
+        const token = localStorage.getItem('token');
+        const messageElement = document.getElementById('protectedMessage');
+      
+        try {
+            const response = await fetch('http://localhost:3000/validate', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`, // Include the JWT in the Authorization header
+                },
+            });
+    
+            const result = await response.json();
+            if (response.ok) {
+                // Only load protected content if validation is successful
+                alert('h')
+                messageElement.innerText = 'Protected message: ' + result.message;
+            } else {
+                // Handle unauthorized access
+                //messageElement.innerText = 'Access denied: ' + result.message;
+                alert('g')
+                localStorage.removeItem('token'); // Remove token if unauthorized
+                window.location.href = 'login.html'; // Redirect to login
+            }
+        } catch (error) {
+            messageElement.innerText = 'Error: ' + error.message; // Handle fetch error
+            localStorage.removeItem('token'); // Clear token in case of error
+            window.location.href = 'login.html'; // Redirect to login
+        }
+    }
+    window.onload = loadProtectedContent;
+    </script>
+    <div class="shape shape1"></div>
+    <div class="shape shape2"></div>
+    <div class="shape shape3"></div>
+    <div class="shape shape4"></div>
+
+    <button id="signOutButton">Sign Out</button>
+
+    <!-- <h1>Home</h1> -->
+
+    <div class="button-container">
+        <button class="lab-button" id="lab1Button">Lab 1</button>
+        <button class="lab-button" id="lab2Button">Lab 2</button>
+        <button class="lab-button" id="lab3Button">Lab 3</button>
+    </div>
+
+    <div id="uploadForm">
+        <h3></h3>
+        <input type="file" id="fileInput" name="file" required />
+        <button id="uploadButton">Upload</button>
+    </div>
+
+    <div id="uploadResponse"></div> <!-- Response block positioned on the right -->
+
+    <script>
+        async function loadProtectedContent() {
+            const token = localStorage.getItem('token');
+            const messageElement = document.getElementById('protectedMessage');
+
+            if (!token) {
+                messageElement.innerText = 'You are not authorized!';
+                return window.location.href = 'login.html'; // Redirect to login if no token
+            }
+
+            const response = await fetch('http://localhost:3000/validate', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                messageElement.innerText = result.message;
+            } else {
+                messageElement.innerText = 'Access denied: ' + result.message;
+                localStorage.removeItem('token');
+                window.location.href = 'login.html';
+            }
+        }
+
+        if (document.getElementById('protectedMessage')) {
+            window.onload = loadProtectedContent;
+        }
+
+        document.getElementById('lab1Button').addEventListener('click', () => {
+            alert('Lab 1 is not currently set up for uploads.');
+        });
+
+        document.getElementById('lab2Button').addEventListener('click', () => {
+            document.getElementById('uploadForm').style.display = 'block';
+        });
+
+        document.getElementById('lab3Button').addEventListener('click', () => {
+            alert('Lab 3 is not currently set up for uploads.');
+        });
+
+        document.getElementById('uploadButton').addEventListener('click', async (event) => {
+            event.preventDefault();
+
+            const fileInput = document.getElementById('fileInput');
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            const token = localStorage.getItem('token');
+            const uploadResponseElement = document.getElementById('uploadResponse');
+
+            try {
+                const response = await fetch('http://localhost:3000/upload', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: formData,
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    uploadResponseElement.innerText = 'File uploaded successfully: ' + result.output;
+                } else {
+                    uploadResponseElement.innerText = 'Upload failed: ' + result.error;
+                }
+                uploadResponseElement.style.display = 'block';
+            } catch (error) {
+                uploadResponseElement.innerText = 'Error: ' + error.message;
+                uploadResponseElement.style.display = 'block';
+            }
+        });
+
+        // Sign Out Functionality
+        document.getElementById('signOutButton').addEventListener('click', () => {
+            // Remove the token from localStorage
+            localStorage.removeItem('token');
+            // Redirect to login page
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html>
