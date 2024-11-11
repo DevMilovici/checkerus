@@ -26,7 +26,7 @@ run_test_and_compare() {
         
         temp_output="temp_output_$threads.txt"
 
-        { time ./test "$input_file" "$temp_output" $threads >/dev/null; } 2> temp_time.txt
+        { time ./test $threads "$input_file" "$temp_output" >/dev/null; } 2> temp_time.txt
 
         real_time=$(grep real temp_time.txt | awk '{print $2}')
 
@@ -74,7 +74,7 @@ run_test_and_compare() {
 
     
     rm temp_time.txt $temp_output
-    #rm temp*
+    rm temp*
 
     echo "Total points for this test: $total_points"
     echo "--------------------------------------------"

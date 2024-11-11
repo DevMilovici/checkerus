@@ -209,13 +209,12 @@ func UploadFile(c *gin.Context) {
 		return
 	}
 
-	if true {
-		scriptsDir := filepath.Join(os.Getenv("BPATH"), "scripts") // Adjust as needed
-		if err := copyFiles(scriptsDir, userDir); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
-		}
+	scriptsDir := filepath.Join(os.Getenv("BPATH"), "scripts") // Adjust as needed
+	if err := copyFiles(scriptsDir, userDir); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
+
 	// Create an upload request and attempt to add it to the queue
 	req := uploadRequest{c: c, file: file, userID: user.ID, userDir: userDir, filename: newFilename}
 	select {
@@ -293,7 +292,7 @@ func runInDocker(filename, path string) (string, error) {
 	// Command to unzip the file and execute the script
 	cmd := exec.Command("docker", "run", "--rm", "--cpus=8.0", "--memory=2g",
 		"-v", fmt.Sprintf("%s:/app", path), "gcc-runner",
-		"bash", "-c", fmt.Sprintf("chmod u+x tema.sh && ./tema.sh %s", filename))
+		"bash", "-c", fmt.Sprintf("sed -i -e 's/\r$//' tema.sh;sed -i -e 's/\r$//' script.sh;chmod u+x tema.sh && ./tema.sh %s", filename))
 
 	output, err := cmd.CombinedOutput()
 
