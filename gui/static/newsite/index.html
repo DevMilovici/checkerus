@@ -11,36 +11,33 @@
     <!-- Custom CSS -->
     <style>
         body {
-            background-image: url('https://images.pexels.com/photos/1341279/pexels-photo-1341279.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            height: 100vh;
+            background-color: #f0f0f0;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: white;
+            height: 100vh;
             font-family: 'Arial', sans-serif;
+            margin: 0;
+            flex-direction: column;
         }
 
-        .container {
-            max-width: 400px;
-            background-color: rgba(255, 255, 255, 0.9);
+        .card {
+           /* background-color: #ffffff;
             border-radius: 15px;
             padding: 40px;
-            box-shadow: 0px 4px 25px rgba(0, 0, 0, 0.4);
+            box-shadow: 0px 4px 25px rgba(0, 0, 0, 0.2);*/
+            width: 300px;
+            display: flex;
+            justify-content:center;
+            align-content: center;
         }
 
         .card-header {
             text-align: center;
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: bold;
             color: #007bff;
-        }
-
-        .form-label {
-            font-weight: bold;
-            color: #007bff;
+            margin-bottom: 20px;
         }
 
         .form-control {
@@ -48,36 +45,48 @@
             padding: 10px;
             border: 1px solid #ccc;
             margin-bottom: 20px;
-        }
-
-        .btn-primary, .btn-success {
-            border-radius: 25px;
-            font-size: 1.1rem;
-            padding: 10px;
             width: 100%;
-            margin-top: 10px;
         }
 
-        .btn-primary:hover, .btn-success:hover {
-            background-color: #0056b3;
-            color: white;
-        }
+        .btn-primary {
+    background: linear-gradient(135deg, #007bff, #0056b3);  /* Gradient background */
+    color: white;  /* Text color */
+    border: none;  /* Remove default border */
+    border-radius: 10px;  /* Matching rounded corners with inputs */
+    font-size: 1.1rem;  /* Font size */
+    padding: 12px 20px;  /* Padding for button */
+    width: 100%;  /* Full width to match input fields */
+    transition: all 0.3s ease;  /* Smooth transition for hover effects */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);  /* Subtle shadow for depth */
+    margin-top: 10px;  /* Add margin to separate the button from the inputs */
+}
 
-        .form-toggle {
-            text-align: center;
-            margin-top: 20px;
-        }
+.btn-primary:hover {
+    background: linear-gradient(135deg, #0056b3, #004085);  /* Darker gradient on hover */
+    color: white;  /* Ensure text color remains white */
+    transform: translateY(-2px);  /* Slight lift effect */
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);  /* Stronger shadow on hover */
+}
 
-        .form-toggle a {
-            color: #007bff;
-            text-decoration: none;
-            font-weight: bold;
-        }
 
-        .form-toggle a:hover {
-            text-decoration: underline;
-        }
+.btn-primary:focus {
+    outline: none;  /* Remove focus outline */
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5);  /* Add blue outline on focus for accessibility */
+}
+form#loginForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;  /* Center elements horizontally */
+    justify-content: center;  /* Center elements vertically */
+    padding: 20px;
+    border-radius: 10px;
+    background-color: white;  /* White background for the form */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);  /* Soft shadow for depth */
+    width: 300px;  /* Fixed width for form */
+    text-align: center;  /* Center text inside form elements */
+}
 
+        
         .footer {
             text-align: center;
             color: #555;
@@ -88,45 +97,17 @@
 </head>
 
 <body>
-    <div class="container">
-        <div class="card" id="loginCard">
+    <div class="card">
+        
+        <div class="card-body">
             <div class="card-header">
-                Login
+                Checker AP
             </div>
-            <div class="card-body">
-                <form id="loginForm">
-                    <label for="loginEmail" class="form-label">Email address</label>
-                    <input type="email" class="form-control" id="loginEmail" placeholder="Enter your email" required>
-                    
-                    <label for="loginPassword" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="loginPassword" placeholder="Enter your password" required>
-                    
-                    <button type="submit" class="btn btn-primary">Login</button>
-                </form>
-                <div class="form-toggle">
-                    <p>Don't have an account? <a href="javascript:void(0);" id="showSignup">Signup</a></p>
-                </div>
-            </div>
-        </div>
-
-        <div class="card" id="signupCard" style="display: none;">
-            <div class="card-header">
-                Signup
-            </div>
-            <div class="card-body">
-                <form id="signupForm">
-                    <label for="signupEmail" class="form-label">Email address</label>
-                    <input type="email" class="form-control" id="signupEmail" placeholder="Enter your email" required>
-                    
-                    <label for="signupPassword" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="signupPassword" placeholder="Enter your password" required>
-                    
-                    <button type="submit" class="btn btn-success">Signup</button>
-                </form>
-                <div class="form-toggle">
-                    <p>Already have an account? <a href="javascript:void(0);" id="showLogin">Login</a></p>
-                </div>
-            </div>
+            <form id="loginForm">
+                <input type="email" class="form-control" id="loginEmail" placeholder="Email" required>
+                <input type="password" class="form-control" id="loginPassword" placeholder="Password" required>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
         </div>
     </div>
 
@@ -147,18 +128,6 @@
 
     <script>
         $(document).ready(function () {
-            // Show Signup form when clicking "Signup"
-            $('#showSignup').on('click', function () {
-                $('#loginCard').hide();
-                $('#signupCard').show();
-            });
-
-            // Show Login form when clicking "Login"
-            $('#showLogin').on('click', function () {
-                $('#signupCard').hide();
-                $('#loginCard').show();
-            });
-
             // Handle login form submission
             $('#loginForm').on('submit', function (event) {
                 event.preventDefault();
@@ -166,7 +135,7 @@
                 var password = $('#loginPassword').val();
 
                 $.ajax({
-                    url: 'http://localhost:3000/login', // API endpoint
+                    url: 'http://10.13.0.85:3000/login', // API endpoint
                     method: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({ email: email, password: password }),
@@ -178,27 +147,6 @@
                     },
                     error: function (xhr) {
                         alert('Login Failed: ' + xhr.responseJSON.error);
-                    }
-                });
-            });
-
-            // Handle signup form submission
-            $('#signupForm').on('submit', function (event) {
-                event.preventDefault();
-                var email = $('#signupEmail').val();
-                var password = $('#signupPassword').val();
-
-                $.ajax({
-                    url: 'http://localhost:3000/signup', // API endpoint
-                    method: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({ email: email, password: password }),
-                    success: function (response) {
-                        // Redirect to the main page on success
-                        window.location.href = 'main.html';
-                    },
-                    error: function (xhr) {
-                        alert('Signup Failed: ' + xhr.responseJSON.error);
                     }
                 });
             });

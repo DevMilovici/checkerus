@@ -11,7 +11,9 @@
     <!-- Custom CSS for Enhancements -->
     <style>
         body {
-            background-image: url('https://images.pexels.com/photos/1341279/pexels-photo-1341279.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
+            /*background-image: url('https://images.pexels.com/photos/1341279/pexels-photo-1341279.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
+            */
+            background-color: rgba(192, 191, 191, 0.691);
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -24,7 +26,7 @@
         }
 
         header {
-            background-color: rgba(0, 123, 255, 0.8);
+            background-color: rgba(0, 123, 255, 0.635);
             padding: 15px;
             color: white;
             text-align: center;
@@ -70,7 +72,7 @@
             max-width: 800px;
             margin: auto;
             padding: 20px;
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: rgba(255, 255, 255, 0.697);
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
             margin-top: 30px;
@@ -199,7 +201,7 @@
                 <button type="submit" class="btn-upload">Upload</button>
             </form>
             <div class="occupy-bar-container">
-                <h3>Queue Occupancy</h3>
+                <h3></h3>
                 <div id="occupyBar" class="occupy-bar"></div>
             </div>
             <div class="timeout">
@@ -245,7 +247,7 @@
 
             // Fetch user name
             $.ajax({
-                url: 'http://localhost:3000/validate',
+                url: 'http://10.13.0.85:3000/validate',
                 method: 'GET',
                 headers: { 'Authorization': `Bearer ${token}` },
                 success: function (response) {
@@ -259,7 +261,7 @@
             // Load queue status and timeout in Upload tab
             function loadQueueAndTimeout() {
                 $.ajax({
-                    url: 'http://localhost:3000/queue-status',
+                    url: 'http://10.13.0.85:3000/queue-status',
                     method: 'GET',
                     headers: { 'Authorization': `Bearer ${token}` },
                     success: function (response) {
@@ -272,7 +274,7 @@
                 });
 
                 $.ajax({
-                    url: 'http://localhost:3000/canLoad',
+                    url: 'http://10.13.0.85:3000/canLoad',
                     method: 'GET',
                     headers: { 'Authorization': `Bearer ${token}` },
                     success: function (response) {
@@ -300,7 +302,7 @@
             // Fetch history and cache it
             function fetchHistory() {
                 $.ajax({
-                    url: 'http://localhost:3000/history',
+                    url: 'http://10.13.0.85:3000/history',
                     method: 'GET',
                     headers: { 'Authorization': `Bearer ${token}` },
                     success: function (response) {
@@ -365,7 +367,7 @@
                 formData.append('file', file);
 
                 $.ajax({
-                    url: 'http://localhost:3000/upload',
+                    url: 'http://10.13.0.85:3000/upload',
                     method: 'POST',
                     headers: { 'Authorization': `Bearer ${token}` },
                     data: formData,
