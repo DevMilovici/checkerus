@@ -26,11 +26,12 @@
         }
 
         header {
+            max-height: 30px;
             background-color: rgba(0, 123, 255, 0.635);
             padding: 15px;
             color: white;
             text-align: center;
-            position: sticky;
+            
             top: 0;
             z-index: 10;
             display: flex;
@@ -70,8 +71,9 @@
         .container {
             width: 80%;
             max-width: 800px;
-            margin: auto;
-            padding: 20px;
+            margin: 150px auto;
+            padding: 50px;
+            
             background-color: rgba(255, 255, 255, 0.697);
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
@@ -174,6 +176,8 @@
             color: gray;
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
 </head>
 
 <body>
@@ -228,7 +232,7 @@
             </div>
             <div class="result-container" id="resultContainer">
                 <h3>Result Details</h3>
-                <p id="resultDetails">No result selected.</p>
+                <pre id="resultDetails">No result selected.</pre>
             </div>
         </div>
     </div>
@@ -320,10 +324,11 @@
                 historyTableBody.empty();
                 if (history && history.length > 0) {
                     history.forEach(record => {
+                        const formattedDate = moment(record.Timestamp).format('DD.MM.YY HH:mm');
                         historyTableBody.append(`
                             <tr>
                                 <td>${record.ID}</td>
-                                <td>${record.Timestamp}</td>
+                                <td>${formattedDate}</td>
                                 <td><button class="btn-show-results" data-id="${record.Result}">Show Results</button></td>
                             </tr>
                         `);
