@@ -1,6 +1,9 @@
 import router from '@/router';
 import { defineStore } from 'pinia'
 
+import fetchWrapper from "@/helpers/fetch-wrapper";
+const API_URL = `${import.meta.env.VITE_API_URL}`;
+
 export default defineStore('auth', {
   state: () => ({
     user: JSON.parse(localStorage.getItem("user")),
@@ -24,23 +27,21 @@ export default defineStore('auth', {
   },
   actions: {
     async login(email, password) {
-      // TODO: Send request to backend
-      const loginResponse = {
-        success: true,
-        jwt: "asdasdasdas",
-        email: "emil.bureaca@mta.ro"
-      }
-      // TODO: Remove this after sending request to backend
-      if(password != "12345")
-        loginResponse.success = false;
+      // Send request to backend
+      let loginResponse = await fetchWrapper.post(
+        `${API_URL}/login`, 
+        {
+          email: email,
+          password: password
+        }
+      );
 
       if(!loginResponse?.success) {
         return loginResponse ?? { success: false };
       }
         
       this.user = {
-        jwt: loginResponse.jwt,
-        email: loginResponse.email
+        auth_token: loginResponse.token
       };
 
       localStorage.setItem("user", JSON.stringify(this.user));

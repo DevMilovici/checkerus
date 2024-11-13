@@ -54,16 +54,17 @@ export default {
 
           let authStore = useAuthStore();
           
-          setTimeout(async () => {
-            let loginResponse = await authStore.login(values.email, values.password);
+          // setTimeout(async () => {
+          let loginResponse = await authStore.login(values.email, values.password);
 
-            if(loginResponse.success) {
-              this.$toast.add({ severity: 'success', summary: 'Autentificarea a avut loc cu succes. Vă direcționăm către pagina principală în câteva clipe!', life: 3000 });
-            } else {
-              this.$toast.add({ severity: 'error', summary: 'Credențiale invalide.', life: 3000 });
-            }
-            this.isLoading = false;
-          }, "2000");
+          if(loginResponse.success) {
+            this.$toast.add({ severity: 'success', summary: 'Autentificarea a avut loc cu succes. Vă direcționăm către pagina principală în câteva clipe!', life: 3000 });
+          } else {
+            // TODO: Treat status codes (404, 500, no connection...)
+            this.$toast.add({ severity: 'error', summary: 'Credențiale invalide.', life: 3000 });
+          }
+          this.isLoading = false;
+          // }, "2000");
       }
     }
   }

@@ -31,6 +31,8 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to) => {
+  const toast = useToast();
+
   // Redirect to login page if logged in and trying to access a restricted page
   const publicPages = ["/login", "/about"];
   const authRequired = !publicPages.includes(to.path);
@@ -53,11 +55,8 @@ router.beforeEach(async (to) => {
 
   if(authRequired && authStore.user) {
     // Check the jwt expiration
-    // TODO: Remove this return after the jwt is implemented accordingly
-    return;
-    console.log("Check the jwt expiration")
     try {
-      let base64Url = authStore.user.jwt.split(".")[1];
+      let base64Url = authStore.user.auth_token.split(".")[1];
       let base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
       let jsonPayload = decodeURIComponent(
         window
@@ -73,13 +72,16 @@ router.beforeEach(async (to) => {
       let current_time = Date.now() / 1000;
       if (jwtDecoded.exp < current_time) {
         // Then logout
+        // TODO: Remove this log
+        console.log("Credențialele au expirat!");
         authStore.logout();
+        toast.add({ severity: 'error', summary: 'Credențialele au expirat!', life: 3000 });
         return "/login";
       }
     } catch (error) {
       authStore.logout();
-      
-      const toast = useToast();
+      // TODO: Remove this log
+      console.log("Credențialele au expirat!");
       toast.add({ severity: 'error', summary: 'Credențialele au expirat!', life: 3000 });
       
       return "/login";
