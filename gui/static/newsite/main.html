@@ -31,7 +31,7 @@
             padding: 15px;
             color: white;
             text-align: center;
-            
+
             top: 0;
             z-index: 10;
             display: flex;
@@ -71,9 +71,14 @@
         .container {
             width: 80%;
             max-width: 800px;
-            margin: 150px auto;
-            padding: 50px;
-            
+
+            height: 400px;
+            max-height: 80%;
+
+            margin: 100px auto;
+            margin-bottom: 30px;
+            padding: 30px;
+
             background-color: rgba(255, 255, 255, 0.697);
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
@@ -152,7 +157,8 @@
             border-collapse: collapse;
         }
 
-        table th, table td {
+        table th,
+        table td {
             padding: 10px;
             text-align: left;
         }
@@ -162,6 +168,9 @@
         }
 
         .result-container {
+            height: auto;
+            margin: auto;
+            margin-top: 0px;
             margin-top: 20px;
             padding: 15px;
             background-color: #f8f9fa;
@@ -174,6 +183,18 @@
             margin-top: 20px;
             font-size: 0.9rem;
             color: gray;
+        }
+
+        .result-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            display: none;
+            /* This can be toggled by JavaScript */
+        }
+        button{
+            color: rgba(0, 123, 255, 0.635);
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
@@ -216,6 +237,7 @@
         <!-- Upload History Tab -->
         <div class="tab-content" id="history">
             <h2>Upload History</h2>
+            <button id="refreshHistoryBtn" class="btn-upload" style="margin-bottom: 15px;">Refresh History</button>
             <div class="history-table-container">
                 <table>
                     <thead>
@@ -230,12 +252,15 @@
                     </tbody>
                 </table>
             </div>
-            <div class="result-container" id="resultContainer">
-                <h3>Result Details</h3>
-                <pre id="resultDetails">No result selected.</pre>
-            </div>
         </div>
     </div>
+
+    <!-- Result Container Below the .container -->
+    <div class="result-container" id="resultContainer">
+        <h3>Result Details</h3>
+        <pre id="resultDetails">No result selected.</pre>
+    </div>
+
 
     <footer>
         <p>- Algoritmi Paraleli -</p>
@@ -261,7 +286,9 @@
                     $('#userName').text("Hello, Guest!");
                 }
             });
-
+            $('#refreshHistoryBtn').on('click', function () {
+                fetchHistory();
+            });
             // Load queue status and timeout in Upload tab
             function loadQueueAndTimeout() {
                 $.ajax({
@@ -323,15 +350,18 @@
                 const historyTableBody = $('#historyTableBody');
                 historyTableBody.empty();
                 if (history && history.length > 0) {
+                    index = 1
                     history.forEach(record => {
                         const formattedDate = moment(record.Timestamp).format('DD.MM.YY HH:mm');
+
                         historyTableBody.append(`
                             <tr>
-                                <td>${record.ID}</td>
+                                <td>${index}</td>
                                 <td>${formattedDate}</td>
                                 <td><button class="btn-show-results" data-id="${record.Result}">Show Results</button></td>
                             </tr>
                         `);
+                        index += 1
                     });
                 } else {
                     historyTableBody.append('<tr><td colspan="3">No upload history available.</td></tr>');
@@ -342,14 +372,29 @@
             $(document).on('click', '.btn-show-results', function () {
                 const resultId = $(this).data('id');
                 const result = cachedHistory.find(record => record.Result === resultId);
+
                 if (result) {
-                    $('#resultDetails').text(`Result for ${result.Timestamp}: ${result.Result}`);
-                    $('#resultContainer').show();
+                    // Toggle visibility
+                    if ($('#resultContainer').is(':visible') && $('#resultDetails').text().includes(resultId)) {
+                        $('#resultContainer').hide();
+                    } else {
+                        $('#resultDetails').text(`Result for ${result.Timestamp}: ${result.Result}`);
+                        $('#resultContainer').show();
+                    }
                 }
             });
+            $('#uploadTab').on('click', function () {
+                $('#uploadTab').addClass('active');
+                $('#historyTab').removeClass('active');
+                $('#upload').addClass('active');
+                $('#history').removeClass('active');
 
+                // Hide the result container
+                $('#resultContainer').hide();
+            });
             // Tab navigation
             $('#uploadTab').on('click', function () {
+                $('#resultContainer').hide();
                 $('#uploadTab').addClass('active');
                 $('#historyTab').removeClass('active');
                 $('#upload').addClass('active');
