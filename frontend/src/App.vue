@@ -1,20 +1,20 @@
 <template>
   <div class="h-[100vh] flex items-center justify-center align-center">
     <!-- Header -->
-    <header class="w-[300px] min-w-[300px] h-full flex flex-col justify-center border-r p-2">
+    <header class="w-[300px] min-w-[300px] h-full flex flex-col justify-center p-2 border-r border-green-200">
       <!-- Logo image -->
-      <div class="flex flex-row justify-center min-w-[200px] mb-4">
-        <img alt="Vue logo" class="block w-[100px]" src="@/assets/a.png" />
-        <img alt="Vue logo" class="block w-[100px]" src="@/assets/p.png" />
+      <div class="flex flex-row justify-center items-end gap-1 min-w-[200px] p-1 mb-4 ">
+        <img alt="Vue logo" class="block w-[100px]" src="@/assets/ap.png" />
+        <h1 class="font-bold text-4xl text-green-400">Checker</h1>
       </div>
       <div class="flex flex-col gap-2 items-center ">
-        <h1 class="font-bold text-4xl text-green-400">Checker</h1>
         <!-- Links -->
         <nav class="flex flex-row">
           <RouterLink class="p-2 text-lg" v-if="isAuthenticated" to="/">Acasă</RouterLink>
           <RouterLink class="p-2 text-lg" v-if="!isAuthenticated" to="/login">Autentificare</RouterLink>
           <RouterLink class="p-2 text-lg" to="/about">Despre</RouterLink>
         </nav>
+        <!-- Logout button -->
         <div class="flex items-center justify-center w-[50px] h-[50px]">
           <Button v-if="isAuthenticated" icon="pi pi-sign-out" severity="danger" @click="logout()" />
         </div>

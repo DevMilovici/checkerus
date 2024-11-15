@@ -56,7 +56,7 @@ function authHeader(url) {
     const authStore = useAuthStore();
     const isApiUrl = url.startsWith(API_URL);
     if (authStore?.isAuthenticated && isApiUrl) {
-        return { Authorization: `Bearer ${user.auth_token}` };
+        return { Authorization: `Bearer ${authStore.user.auth_token}` };
     } else {
         return {};
     }
@@ -64,7 +64,6 @@ function authHeader(url) {
 
 function uploadFile(method) {
     return (url, fileFormData) => {
-      console.log(fileFormData);
       const requestOptions = {
         method: method,
         headers: authHeader(url),
@@ -74,7 +73,8 @@ function uploadFile(method) {
       return fetch(url, requestOptions)
         .then(handleResponse)
         .catch((error) => {
-          return error;
-        });
+          return { success: false, error: error };
+        }
+      );
     };
   }

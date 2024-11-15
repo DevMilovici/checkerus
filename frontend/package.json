@@ -13,6 +13,7 @@
   "dependencies": {
     "@primevue/forms": "^4.2.1",
     "@primevue/themes": "^4.2.1",
+    "moment": "^2.30.1",
     "pinia": "^2.2.6",
     "primeicons": "^7.0.0",
     "primevue": "^4.2.1",

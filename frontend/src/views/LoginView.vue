@@ -47,8 +47,6 @@ export default {
   methods: {
     async onFormSubmit({ valid, values }){
       if (valid) {
-          console.log(values)
-          
           this.isLoading = true;
           this.$toast.add({ severity: 'success', summary: 'Cererea de autentificare a fost trimisă.', life: 3000 });
 
