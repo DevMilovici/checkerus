@@ -21,7 +21,7 @@ func main() {
 
 	r := gin.Default()
 	config := cors.Config{
-		AllowOrigins:     []string{"http://localhost:8081"}, // Change to your frontend port
+		AllowOrigins:     []string{"*"}, // Change to your frontend port
 		AllowMethods:     []string{"GET", "POST"},           // Add other methods if needed
 		AllowHeaders:     []string{"Authorization", "Content-Type"},
 		AllowCredentials: true, // Allow credentials (cookies, authorization headers)

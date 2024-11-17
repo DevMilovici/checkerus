@@ -8,4 +8,5 @@ type UploadHistory struct {
 	Filename  string
 	Timestamp time.Time // Date of upload
 	Result    string    // Result from Docker execution
+	Points	  uint
 }

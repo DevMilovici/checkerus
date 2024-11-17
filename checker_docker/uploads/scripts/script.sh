@@ -1,6 +1,6 @@
 #!/bin/bash
 
-gcc -pthread -o test $1
+gcc -o test $1 -lpthread -lm
 
 input_file_1=$2
 input_file_2=$3
@@ -15,13 +15,19 @@ thread_counts=(1 2 4 8)
 baseline_time=0
 
 index=0
+max_points=0
 
 run_test_and_compare() {
     local expected_output_file=$1
     local input_file=$2
 
     total_points=0
-
+  
+    t1=0
+    t2=0
+    t3=0
+    t4=0
+    index_t=0
     for threads in "${thread_counts[@]}"; do
         
         temp_output="temp_output_$threads.txt"
@@ -46,28 +52,59 @@ run_test_and_compare() {
             baseline_time=$total_time
         fi
 
-        speedup=$(awk "BEGIN { printf \"%.2f\", $baseline_time / $total_time }")
-        echo "Speedup with $threads thread(s): $speedup"
-    done
 
-    
+	if [ "$index_t" -eq "0" ]; then
+		t1=$total_time
+	fi
+	if [ "$index_t" -eq "1" ]; then
+                t2=$total_time
+        fi
+	if [ "$index_t" -eq "2" ]; then
+                t3=$total_time
+        fi
+	if [ "$index_t" -eq "3" ]; then
+                t4=$total_time
+        fi
+	
+	index_t=$((index_t + 1))
+        #speedup=$(awk "BEGIN { printf \"%.2f\", $baseline_time / $total_time }")
+        
+        
+	#echo "Speedup with $threads thread(s): $speedup"
+    done
+	#echo test
+	#echo ($t1/($t2+0.00001)
+	#echo (${t1}/(${t2}+0.00001) | bc -l
+	#echo test2
+    echo 1
+   # speedup=$(echo "((${t1}/(${t2}+0.00001))+(${t2}/(${t4}+0.00001))+(${t4}/(${t8}+0.00001)))/3" | bc -l)
+    speedup=$(echo "scale=6; (($t1/($t2+0.00001)) + ($t2/($t3+0.00001)) + ($t3/($t4+0.00001))) / 3" | bc -l)
+
+    echo 2
+
     total_points=$((total_points))
     if [ "$total_points" -eq "4" ];then
-       if [ "$index" -eq "0" ];then
+       ######ADD SPEEDUP CONSTRAINT
+	if [ "$index" -eq "0" ];then
             total_points=50
+            max_points=$((max_points + 50)) 
        fi
 
        if [ "$index" -eq "1" ];then
             total_points=10
+            max_points=$((max_points + 10)) 
        fi
 
        if [ "$index" -eq "2" ];then
             total_points=30
+            max_points=$((max_points + 30)) 
        fi
 
        if [ "$index" -eq "3" ];then
             total_points=10
+            max_points=$((max_points + 10)) 
        fi
+	echo "Speedup ( T1/T2 + T2/T4 + T4/T8 )/3 : $speedup"
     else
         total_points=0
     fi
@@ -92,3 +129,6 @@ run_test_and_compare $expected_output_file_3 $input_file_3
 
 echo "Running second test (comparing with $expected_output_file_4)..."
 run_test_and_compare $expected_output_file_4 $input_file_4
+
+echo "--------------------------------------------"
+ echo "Total points: $max_points"

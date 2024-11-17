@@ -17,7 +17,7 @@ func GetUserUploads(c *gin.Context) {
 	// Query the upload history for the user
 	var uploads []models.UploadHistory
 	if err := initializers.DB.
-		Select("user_id, timestamp, result"). // Only select these fields
+		Select("id, timestamp, result,points"). // Only select these fields
 		Where("user_id = ?", user.ID).
 		Find(&uploads).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not retrieve uploads"})

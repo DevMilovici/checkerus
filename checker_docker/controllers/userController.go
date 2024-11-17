@@ -12,6 +12,9 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -160,6 +163,55 @@ func CanUpload(c *gin.Context) {
 	}
 
 }
+func ProcessQueue() {
+    for req := range requestQueue {
+        semaphore <- struct{}{}
+        go func(req uploadRequest) {
+            defer func() { <-semaphore }()
+
+            // Run the file in Docker
+            output, err := runInDocker(req.filename, req.userDir)
+            result := output
+
+            // Check if there was an error during execution
+            if err != nil {
+                req.c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+                result = err.Error()
+            } else if result == "" {
+                result = "Compilation error or no output!"
+            } else {
+                req.c.JSON(http.StatusOK, gin.H{"status": "file executed successfully", "output": output})
+            }
+
+            // Extract total points from the output
+            re := regexp.MustCompile(`Total points: (\d+)`)
+            totalPoints := 0 // Initialize totalPoints with a default value
+
+            match := re.FindStringSubmatch(result)
+            if len(match) > 1 {
+                totalPoints, err = strconv.Atoi(match[1])
+                if err != nil {
+                    totalPoints = 0 // Set to 0 if there's an error in conversion
+                }
+            } else {
+                fmt.Println("Total points not found")
+            }
+
+            // Log the upload details in UploadHistory
+            uploadRecord := models.UploadHistory{
+                UserID:    req.userID.(uint), // Assuming userID is of type uint
+                Filename:  req.filename,
+                Timestamp: time.Now(),
+                Result:    result,
+                Points:    uint(totalPoints),
+            }
+
+            if dbErr := initializers.DB.Create(&uploadRecord).Error; dbErr != nil {
+                fmt.Printf("Error saving upload history: %v\n", dbErr)
+            }
+        }(req)
+    }
+}
 func UploadFile(c *gin.Context) {
 	file, err := c.FormFile("file")
 
@@ -186,7 +238,8 @@ func UploadFile(c *gin.Context) {
 	}
 
 	// Create a user directory if it does not exist
-	userDir := filepath.Join(os.Getenv("BPATH"), user.Email)
+	usernameForDir := strings.Split(user.Email, "@")[0]
+	userDir := filepath.Join(os.Getenv("BPATH"), usernameForDir)
 	if err := os.MkdirAll(userDir, os.ModePerm); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -224,39 +277,7 @@ func UploadFile(c *gin.Context) {
 		c.JSON(http.StatusServiceUnavailable, gin.H{"error": "Queue is full"})
 	}
 }
-func ProcessQueue() {
-	for req := range requestQueue {
-		semaphore <- struct{}{}
-		go func(req uploadRequest) {
-			defer func() { <-semaphore }()
 
-			println("I m in process queue!")
-			output, err := runInDocker(req.filename, req.userDir)
-			println("I finished running in docker!")
-			println(output)
-			result := output
-			if err != nil {
-				req.c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-				result = err.Error()
-			} else {
-				println(output)
-				req.c.JSON(http.StatusOK, gin.H{"status": "file executed successfully", "output": output})
-			}
-
-			// Log the upload details in UploadHistory
-			uploadRecord := models.UploadHistory{
-				UserID:    req.userID.(uint), // Assuming userID is of type uint
-				Filename:  req.filename,
-				Timestamp: time.Now(),
-				Result:    result,
-			}
-
-			if dbErr := initializers.DB.Create(&uploadRecord).Error; dbErr != nil {
-				fmt.Printf("Error saving upload history: %v\n", dbErr)
-			}
-		}(req)
-	}
-}
 func copyFiles(srcDir, destDir string) error {
 	files, err := ioutil.ReadDir(srcDir)
 	if err != nil {
@@ -290,9 +311,9 @@ func runInDocker(filename, path string) (string, error) {
 	fmt.Printf("Running Docker with: %s in path: %s\n", filename, path)
 
 	// Command to unzip the file and execute the script
-	cmd := exec.Command("docker", "run", "--rm", "--cpus=8.0", "--memory=2g",
-		"-v", fmt.Sprintf("%s:/app", path), "gcc-runner",
-		"bash", "-c", fmt.Sprintf("sed -i -e 's/\r$//' tema.sh;sed -i -e 's/\r$//' script.sh;chmod u+x tema.sh && ./tema.sh %s", filename))
+	cmd := exec.Command("docker", "run", "--stop-timeout", "100", "--network", "none", "--rm", "--cpus=8.0", "--memory=2g",
+		"-v", fmt.Sprintf("%s:/app", path), "gcc-withbc",
+		"bash", "-c", fmt.Sprintf("chmod u+x script.sh;chmod u+x tema.sh && ./tema.sh %s", filename))
 
 	output, err := cmd.CombinedOutput()
 
