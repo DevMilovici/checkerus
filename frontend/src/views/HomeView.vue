@@ -176,9 +176,9 @@ export default {
       }
 
       const fileType = this.fileToUpload["type"];
-      const validImageTypes = ["text/plain"];
-      if (!validImageTypes.includes(fileType)) {
-        this.$toast.add({ severity: 'error', summary: 'Tipul de fișier este greșit!', life: 3000 });
+      const validFileTypes = ["text/plain", 'application/octet-stream'];
+      if (!validFileTypes.includes(fileType)) {
+        this.$toast.add({ severity: 'error', summary: `Tipul de fișier ('${fileType}') este greșit!`, life: 3000 });
         event.files.length = 0;
         this.fileToUpload = null;
         return;
